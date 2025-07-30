@@ -52,23 +52,18 @@ pipeline {
         stage("Docker Login & Push") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-pwd', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh "echo $PASS | docker login -u $USER --password-stdin"
-                    sh "docker push trickyknight0/healthcare-app:latest"
+                    sh """
+                        echo $PASS | docker login -u $USER --password-stdin
+                        docker push trickyknight0/healthcare-app:latest
+                    """
                 }
             }
         }
 
         stage("Deploy to Kubernetes") {
-            when {
-                expression { env.BRANCH_NAME == 'master' || env.GIT_BRANCH == 'master' }
-            }
             steps {
-                script {
-                    kubernetesDeploy(
-                        configs: 'deploymentservice.yaml',
-                        kubeconfigId: 'k8sconfigpwd'
-                    )
-                }
+                sh 'kubectl apply -f Deployment.yaml'
+                sh 'kubectl get svc'
             }
         }
     }

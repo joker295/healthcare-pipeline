@@ -1,35 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: healthcare-deployment 
+  name: healthcare-deployment
 
 spec:
   replicas: 2
-  selector:  
+  selector:
     matchLabels:
       project: health-deploy
-  
-  template: 
+
+  template:
     metadata:
-      labels: 
+      labels:
         project: health-deploy
 
-  spec: 
-    containers:
-      - name: container-HC
-        image: trickyknight0/healthcare-app:latest
-        ports : 
-          - containerPort: 8082
+    spec:
+      containers:
+        - name: container-hc
+          image: trickyknight0/healthcare-app:latest
+          ports:
+            - containerPort: 8082
 ---
 apiVersion: v1
 kind: Service
-metadata: 
-  name: HC-service
+metadata:
+  name: hc-service
 
 spec:
+  selector:
+    project: health-deploy
+
   ports:
-  - port: 8082    
-    targetPort: 8082
-  selector: 
-      project: health-deploy
-type: NodePort
+    - port: 8082
+      targetPort: 8082
+      protocol: TCP
+
+  type: NodePort

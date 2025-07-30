@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcare-deployment 
+
+spec:
+  replicas: 2
+  selector:  
+    matchLabels:
+      project: Star-health
+  
+  template: 
+    metadata:
+      label: 
+        project: star-health
+
+  spec: 
+    containers:
+      - name: container-HC
+        image: trickyknight0/healthcare-app:latest
+        ports : 
+          - containerPort: 8091
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: HC-service
+
+spec:
+  ports:
+  - port: 80    
+    targertPort: 8080 
+  selector: 
+    matchLabels:
+      project: Star-health
+type: NodePort

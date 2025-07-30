@@ -1,20 +1,57 @@
-- name : Configure Docker on EC2 Instances
-  hosts : all
-  become: true
-  connection : ssh
-  tasks : 
-  - name: updating apt
-    command : sudo apt-get update
+---
+- hosts: demo
+  become: yes
 
-  - name : Install Docker
-    command : sudo apt-get install -y docker.io
-    become : yes
-    become_user : root
+  tasks:
+  
+    - name: Update System
+      ansible.builtin.apt: 
+        update_cache: yes
+        
 
-  - name : Start Docker Service
-    command : sudo systemctl start docker
-    become : yes
-    become_user : root
+    - name: Install java
+      ansible.builtin.package: 
+        name: openjdk-17-jdk
+        state: present  
+    
+    - name: Install Maven plugin
+      become: true
+      ansible.builtin.get_url: 
+        url  : https://downloads.apache.org/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
+        dest : /tmp/apache-maven-3.8.1-bin.tar.gz
 
-  - name: Deploy Docker Container
-    command: docker run -itd -p 8084:8082 shubhamkushwah123/medicure:1.0
+    - name: Untar Maven
+      become: true 
+      ansible.builtin.unarchive:
+        src: /tmp/apache-maven-3.8.1-bin.tar.gz
+        dest: /opt/
+        remote_src: yes 
+
+    - name: Jenkins Key 
+      become: yes
+      ansible.builtin.apt_key:
+        url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
+      
+    - name: Install Jenkins Repo 
+      become: yes
+      ansible.builtin.apt_repository:
+        repo: deb https://pkg.jenkins.io/debian binary/
+        state: present
+      
+    - name: Install Jenkins  
+      become: yes
+      ansible.builtin.package:
+        name: jenkins
+        state: present
+      
+
+    - name: Install Docker 
+      ansible.builtin.package: 
+        name: docker.io
+        state: present  
+
+    - name: Start Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true

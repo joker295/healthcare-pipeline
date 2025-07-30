@@ -7,12 +7,12 @@ spec:
   replicas: 2
   selector:  
     matchLabels:
-      project: Star-health
+      project: health-deploy
   
   template: 
     metadata:
       label: 
-        project: star-health
+        project: health-deploy
 
   spec: 
     containers:
@@ -32,5 +32,5 @@ spec:
     targertPort: 8082
   selector: 
     matchLabels:
-      project: Star-health
+      project: health-deploy
 type: NodePort

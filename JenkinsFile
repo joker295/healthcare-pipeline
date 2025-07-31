@@ -33,19 +33,9 @@ pipeline {
             }
         }
 
-        stage("Create Dockerfile") {
+           stage("Build Docker Image") {
             steps {
-                writeFile file: 'Dockerfile', text: '''
-                FROM openjdk:17
-                COPY target/*.jar app.jar
-                ENTRYPOINT ["java", "-jar", "/app.jar"]
-                '''
-            }
-        }
-
-        stage("Build Docker Image") {
-            steps {
-                sh "docker build -t trickyknight0/healthcare-app:latest ."
+                sh "docker build -t trickyknight0/insurance-app:latest ."
             }
         }
 

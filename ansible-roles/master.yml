@@ -1,0 +1,9 @@
+---
+
+- hosts: demo
+  become: yes
+  roles:
+    - common
+    - jenkins
+    - docker
+    - prometheus

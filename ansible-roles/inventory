@@ -1,0 +1,4 @@
+[demo]
+ 
+IP of host machine ansible_user=ubuntu
+

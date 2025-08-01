@@ -1,0 +1,22 @@
+    - name: Update System
+      ansible.builtin.apt: 
+        update_cache: yes
+        
+
+    - name: Install java
+      ansible.builtin.package: 
+        name: openjdk-17-jdk
+        state: present  
+    
+    - name: Install Maven plugin
+      become: true
+      ansible.builtin.get_url: 
+        url  : https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
+        dest : /tmp/apache-maven-3.8.1-bin.tar.gz
+
+    - name: Untar Maven
+      become: true 
+      ansible.builtin.unarchive:
+        src: /tmp/apache-maven-3.8.1-bin.tar.gz
+        dest: /opt/
+        remote_src: yes 

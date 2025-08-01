@@ -1,0 +1,15 @@
+---
+- name: Add Jenkins Key
+  ansible.builtin.apt_key:
+    url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
+
+- name: Add Jenkins Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://pkg.jenkins.io/debian binary/
+    state: present
+
+- name: Install Jenkins
+  ansible.builtin.package:
+    name: jenkins
+    state: present
+
